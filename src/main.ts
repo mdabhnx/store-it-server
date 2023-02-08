@@ -1,9 +1,10 @@
-import express, { Response } from "express";
-import dotenv from "dotenv";
+import express, { Response, Application } from "express";
+import * as dotenv from "dotenv";
+
+import { connetion } from "./mongo/connection";
 
 dotenv.config();
-
-const app = express();
+const app: Application = express();
 
 app.use(express.json());
 
@@ -13,6 +14,12 @@ app.get("/health", (_, res: Response) => {
   });
 });
 
-const server = app.listen(process.env.PORT || 8918);
+import contents from "./controller/content.controller";
+
+app.use("/v1", contents);
+
+const server = app.listen(process.env.PORT || 8091, () => {
+  connetion();
+});
 
 export { server };
